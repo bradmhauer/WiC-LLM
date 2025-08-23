@@ -12,12 +12,13 @@ logging.getLogger("transformers.tokenization_utils_base").setLevel(logging.ERROR
 logging.getLogger("transformers.configuration_utils").setLevel(logging.ERROR)
 logging.getLogger("transformers.modeling_utils").setLevel(logging.ERROR)
 
-model = "Qwen/Qwen3-4B-FP8"
-pipe = pipeline("text-generation", model=model)
+# model = "Qwen/Qwen3-4B-FP8"
+# pipe = pipeline("text-generation", model=model)
+pipe = None
 
 # Define generation parameters for greedy sampling.
 generation_kwargs = {
-    "max_new_tokens": 128,
+    "max_new_tokens": 1024,
     "temperature": 0.01,
     "top_k": 1,
     "top_p": 1.0,
@@ -57,8 +58,16 @@ def wic_df_to_prompt_df(wic_df: pd.DataFrame, no_think: bool = False):
     return(prompt_df)
 
 
-#def llm_for_wic(lemma: str, sentence1: str, sentence2: str, model: str = '"Qwen/Qwen3-4B-FP8"', no_think: bool = False) -> bool:
-def llm_for_wic(lemma: str, sentence1: str, sentence2: str, no_think: bool = False) -> bool:
+def llm_for_wic(lemma: str,
+                sentence1: str,
+                sentence2: str,
+                model: str = '"Qwen/Qwen3-4B-FP8"',
+                no_think: bool = False,) -> bool:
+
+    global pipe
+    if pipe is None:
+        pipe = pipeline('text-generation', model=model)
+    
     try:
         prompt = get_prompt(lemma, sentence1, sentence2, no_think)
         messages = [{'role':'user', 'content':prompt}]
@@ -69,7 +78,6 @@ def llm_for_wic(lemma: str, sentence1: str, sentence2: str, no_think: bool = Fal
         if len(parts) >= 2:
             answer = parts[1].strip()
         else:
-            # Fallback if splitting fails
             answer = content.strip()
 
         return(answer.lower().startswith('same'))
