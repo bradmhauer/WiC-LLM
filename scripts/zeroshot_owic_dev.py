@@ -1,7 +1,7 @@
-from tqdm import tqdm # To give us a progress bar.
 from file_utils import read_data_owic, read_gold_owic
 #from wic_ollama import llm_for_wic
 from wic_hf import llm_for_wic
+from tqdm import tqdm # To give us a progress bar.
 
 import argparse
 
@@ -11,10 +11,10 @@ def parse_arguments():
     parser.add_argument('--qwen_think', action='store_true', default=False,
                         help='Enable Qwen think mode (default: False)')
 
-    parser.add_argument('--dev_data', type=str, default='owic/dev/dev.data.txt',
+    parser.add_argument('--dev_data', type=str, default='../../owic/dev/dev.data.txt',
                         help='Path to the data file (default: owic/dev/dev.data.txt)')
 
-    parser.add_argument('--dev_gold', type=str, default='owic/dev/dev.gold.txt',
+    parser.add_argument('--dev_gold', type=str, default='../../owic/dev/dev.gold.txt',
                         help='Path to the gold file (default: owic/dev/dev.gold.txt)')
 
     parser.add_argument('--output', type=str, default='zeroshot_owic_dev.tsv',
@@ -46,7 +46,7 @@ df['answer'] = df.progress_apply(
     )
 print('DONE!\n')
 
-df['gold'] = read_gold_owic('owic/dev/dev.gold.txt')
+df['gold'] = read_gold_owic(args.dev_gold)
 
 df['eval'] = df['gold'] == df['answer']
 
