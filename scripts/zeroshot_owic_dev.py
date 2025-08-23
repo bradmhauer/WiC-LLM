@@ -1,6 +1,4 @@
 from file_utils import read_data_owic, read_gold_owic
-#from wic_ollama import llm_for_wic
-from wic_hf import llm_for_wic
 from tqdm import tqdm # To give us a progress bar.
 
 import argparse
@@ -8,13 +6,19 @@ import argparse
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Command line argument parser for model and data files.")
 
+    parser.add_argument('--framework', type=str, default='transformers',
+                        help='The backend to use for LLM inference.')
+
+    parser.add_argument('--model', type=str, default='Qwen/Qwen3-4B-FP8',
+                        help='The LLM to be used.')
+    
     parser.add_argument('--qwen_think', action='store_true', default=False,
                         help='Enable Qwen think mode (default: False)')
 
-    parser.add_argument('--dev_data', type=str, default='../../owic/dev/dev.data.txt',
+    parser.add_argument('--data', type=str, default='../../owic/dev/dev.data.txt',
                         help='Path to the data file (default: owic/dev/dev.data.txt)')
 
-    parser.add_argument('--dev_gold', type=str, default='../../owic/dev/dev.gold.txt',
+    parser.add_argument('--gold', type=str, default='../../owic/dev/dev.gold.txt',
                         help='Path to the gold file (default: owic/dev/dev.gold.txt)')
 
     parser.add_argument('--output', type=str, default='zeroshot_owic_dev.tsv',
@@ -26,14 +30,20 @@ def parse_arguments():
 
 args = parse_arguments()
 print("Parsed arguments:")
+print(f"Framework:  {args.framework}")
 print(f"Qwen Think: {args.qwen_think}")
-print(f"Dev Data: {args.dev_data}")
-print(f"Dev Gold: {args.dev_gold}")
-print(f"Output: {args.output}")
+print(f"Dev Data:   {args.data}")
+print(f"Dev Gold:   {args.gold}")
+print(f"Output:     {args.output}")
 print()
 
-print(f'Reading data from {args.dev_data}.')
-df = read_data_owic(args.dev_data)
+if args.framework == 'transformers':
+    from wic_hf import llm_for_wic
+elif args.framework == 'ollama':
+    from wic_ollama import llm_for_wic
+
+print(f'Reading data from {args.data}.')
+df = read_data_owic(args.data)
 
 print(f'Computing {len(df)} answers with Qwen3.')
 tqdm.pandas(desc="Processing rows")
@@ -46,7 +56,7 @@ df['answer'] = df.progress_apply(
     )
 print('DONE!\n')
 
-df['gold'] = read_gold_owic(args.dev_gold)
+df['gold'] = read_gold_owic(args.gold)
 
 df['eval'] = df['gold'] == df['answer']
 
