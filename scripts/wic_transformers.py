@@ -12,8 +12,6 @@ logging.getLogger("transformers.tokenization_utils_base").setLevel(logging.ERROR
 logging.getLogger("transformers.configuration_utils").setLevel(logging.ERROR)
 logging.getLogger("transformers.modeling_utils").setLevel(logging.ERROR)
 
-# model = "Qwen/Qwen3-4B-FP8"
-# pipe = pipeline("text-generation", model=model)
 pipe = None
 
 # Define generation parameters for greedy sampling.
@@ -61,7 +59,7 @@ def wic_df_to_prompt_df(wic_df: pd.DataFrame, no_think: bool = False):
 def llm_for_wic(lemma: str,
                 sentence1: str,
                 sentence2: str,
-                model: str = '"Qwen/Qwen3-4B-FP8"',
+                model: str = 'Qwen/Qwen3-4B-FP8',
                 no_think: bool = False,) -> bool:
 
     global pipe

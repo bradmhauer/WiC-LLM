@@ -31,6 +31,7 @@ def wic_df_to_prompt_df(wic_df: pd.DataFrame, no_think: bool = False):
     prompt_df = pd.DataFrame(columns)
     return(prompt_df)
 
+
 def llm_for_wic(lemma: str, sentence1: str, sentence2: str, model: str = 'qwen3:4b', no_think: bool = False) -> bool:
     try:
         prompt = get_prompt(lemma, sentence1, sentence2, no_think)
