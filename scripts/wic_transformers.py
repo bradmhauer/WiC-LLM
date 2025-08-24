@@ -1,4 +1,4 @@
-from transformers import pipeline
+from transformers import pipeline, set_seed
 
 # Suppress all transformers warnings and logging
 import os
@@ -14,15 +14,6 @@ logging.getLogger("transformers.modeling_utils").setLevel(logging.ERROR)
 
 pipe = None
 
-# Define generation parameters for greedy sampling.
-generation_kwargs = {
-    "max_new_tokens": 1024,
-    "temperature": 0.01,
-    "top_k": 1,
-    "top_p": 1.0,
-    "do_sample": False,
-    "repetition_penalty": 1.0,
-}
 
 def get_prompt(lemma: str, sentence1: str, sentence2: str, no_think: bool = False) -> str:
     prompt_lines = [
@@ -60,12 +51,25 @@ def llm_for_wic(lemma: str,
                 sentence1: str,
                 sentence2: str,
                 model: str = 'Qwen/Qwen3-4B-FP8',
+                seed: int = 9999,
                 no_think: bool = False,) -> bool:
 
     global pipe
     if pipe is None:
         pipe = pipeline('text-generation', model=model)
-    
+
+    set_seed(seed)
+        
+    # Define generation parameters for greedy sampling.
+    generation_kwargs = {
+        "max_new_tokens": 1024,
+        "temperature": 0.01,
+        "top_k": 1,
+        "top_p": 1.0,
+        "do_sample": False,
+        "repetition_penalty": 1.0,
+    }
+        
     try:
         prompt = get_prompt(lemma, sentence1, sentence2, no_think)
         messages = [{'role':'user', 'content':prompt}]

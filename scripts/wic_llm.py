@@ -1,7 +1,25 @@
-from wic_file_utils import read_data_owic, read_gold_owic
-from tqdm import tqdm # To give us a progress bar.
+"""
+Main driver script for WiC experiments.
+Loads data and gold labels,
+runs an LLM backend (Transformers or Ollama),
+saves predictions and evaluation results.
+"""
 
 import argparse
+from tqdm import tqdm # To give us a progress bar.
+
+from wic_file_utils import read_data_owic, read_gold_owic
+
+try:
+    import wic_transformers
+except ImportError:
+    wic_transformers = None
+
+try:
+    import wic_ollama
+except ImportError:
+    wic_ollama = None
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Command line argument parser for model and data files.")
@@ -11,6 +29,9 @@ def parse_arguments():
 
     parser.add_argument('--model', type=str, default='Qwen/Qwen3-4B-FP8',
                         help='The LLM to be used.')
+
+    parser.add_argument('--seed', type=int, default=9999,
+                        help='The random seed, for reproducibility.')
     
     parser.add_argument('--qwen_think', action='store_true', default=False,
                         help='Enable Qwen think mode (default: False)')
@@ -32,21 +53,29 @@ args = parse_arguments()
 print("Parsed arguments:")
 print(f"Framework:  {args.framework}")
 print(f"Model:      {args.model}")
+print(f"Seed:       {args.seed}")
 print(f"Qwen Think: {args.qwen_think}")
 print(f"Dev Data:   {args.data}")
 print(f"Dev Gold:   {args.gold}")
 print(f"Output:     {args.output}")
 print()
 
-if args.framework == 'transformers':
-    from wic_transformers import llm_for_wic
-elif args.framework == 'ollama':
-    from wic_ollama import llm_for_wic
+
+if args.framework == "transformers":
+    if wic_transformers is None:
+        raise ImportError("Transformers backend not available. Please install Transformers.")
+    llm_for_wic = wic_transformers.llm_for_wic
+
+elif args.framework == "ollama":
+    if wic_ollama is None:
+        raise ImportError("Ollama backend not available. Please install Ollama.")
+    llm_for_wic = wic_ollama.llm_for_wic
+
 
 print(f'Reading data from {args.data}.')
 df = read_data_owic(args.data)
 
-print(f'Computing {len(df)} answers with Qwen3.')
+print(f'Computing {len(df)} answers with {args.model}.')
 tqdm.pandas(desc="Processing rows")
 df['answer'] = df.progress_apply(
     lambda instance: llm_for_wic(
@@ -54,7 +83,8 @@ df['answer'] = df.progress_apply(
         instance['sentence1'],
         instance['sentence2'],
         model = args.model,
-        no_think = bool(1-args.qwen_think) # Iff qwen_think is true, no_think is False.
+        seed = args.seed,
+        no_think = not args.qwen_think # Iff qwen_think is true, no_think is False.
         ),
     axis=1,
     )

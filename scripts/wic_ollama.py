@@ -32,15 +32,21 @@ def wic_df_to_prompt_df(wic_df: pd.DataFrame, no_think: bool = False):
     return(prompt_df)
 
 
-def llm_for_wic(lemma: str, sentence1: str, sentence2: str, model: str = 'qwen3:4b', no_think: bool = False) -> bool:
+def llm_for_wic(lemma: str,
+                sentence1: str,
+                sentence2: str,
+                model: str = 'qwen3:4b',
+                seed: int = 9999,
+                no_think: bool = False) -> bool:
     try:
         prompt = get_prompt(lemma, sentence1, sentence2, no_think)
         response = chat(model=model,
                         options={
                             'num_predict':10,
-                            'temperature':0.7,
-                            'top_k':20,
-                            'top_p':0.8
+                            'temperature':0.0,
+                            'top_k':1,
+                            'top_p':1.0,
+                            'seed':seed,
                         },
                         messages=[{
                             'role': 'user',
