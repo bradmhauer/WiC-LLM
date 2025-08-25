@@ -1,4 +1,5 @@
 pandas
+tqdm
 torch
 transformers
 ollama
