@@ -1,4 +1,5 @@
 from transformers import pipeline, set_seed
+from wic_utils import get_prompt
 
 # Suppress all transformers warnings and logging
 import os
@@ -14,43 +15,10 @@ logging.getLogger("transformers.modeling_utils").setLevel(logging.ERROR)
 
 pipe = None
 
-
-def get_prompt(lemma: str, sentence1: str, sentence2: str, no_think: bool = False) -> str:
-    prompt_lines = [
-        "You are an expert in semantics and NLP, especially in judging word meaning.",
-        f"Below are two sentences containing the word '{lemma}'.",
-        f"Sentence 1: {sentence1}",
-        f"Sentence 2: {sentence2}",
-        f"If the word '{lemma}' has the same meaning in both of those sentences, respond 'same'.",
-        f"If the word '{lemma}' has a different meaning in each of those sentences, respond 'different'.",
-        f"Provide only that single word as your response, nothing else.",
-    ]
-    if no_think:
-        prompt_lines.insert(0, '/no_think')
-    return('\n'.join(prompt_lines))
-
-
-import pandas as pd
-def wic_df_to_prompt_df(wic_df: pd.DataFrame, no_think: bool = False):
-    columns = {
-        'prompt':[],
-        'response':[],
-    }
-    
-    for _, row in wic_df.iterrows():
-        prompt = get_prompt(row['lemma'], row['sentence1'], row['sentence2'], no_think)
-        response = 'same' if row['gold'] else 'different'
-        columns['prompt'].append(prompt)
-        columns['response'].append(response)
-
-    prompt_df = pd.DataFrame(columns)
-    return(prompt_df)
-
-
 def llm_for_wic(lemma: str,
                 sentence1: str,
                 sentence2: str,
-                model: str = 'Qwen/Qwen3-4B-FP8',
+                model: str = 'Qwen/Qwen3-1.7B',
                 seed: int = 9999,
                 no_think: bool = False,) -> bool:
 

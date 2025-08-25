@@ -3,12 +3,16 @@ Main driver script for WiC experiments.
 Loads data and gold labels,
 runs an LLM backend (Transformers or Ollama),
 saves predictions and evaluation results.
+
+Usage examples:
+python wic_llm.py --framework transformers --model Qwen/Qwen3-1.7B
+python wic_llm.py --framework ollama --model qwen3:4b
 """
 
 import argparse
 from tqdm import tqdm # To give us a progress bar.
 
-from wic_file_utils import read_data_owic, read_gold_owic
+from wic_utils import read_data_owic, read_gold_owic
 
 try:
     import wic_transformers
