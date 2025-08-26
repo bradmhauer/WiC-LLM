@@ -6,7 +6,7 @@ saves predictions and evaluation results.
 
 Usage examples:
 python wic_llm.py --framework transformers --model Qwen/Qwen3-1.7B
-python wic_llm.py --framework ollama --model qwen3:4b
+python wic_llm.py --framework ollama --model qwen3:1.7b-fp16
 """
 
 import argparse

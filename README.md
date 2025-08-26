@@ -62,9 +62,8 @@ s1 = "Under the bridge on the bank of the river."
 s2 = "I have to go to the bank to deposit some cash."
 s3 = "What do I need to open an account at the bank?."
 
-print(llm_for_wic(lemma, s1, s2, model="qwen3:4b", seed=9999))
-print(llm_for_wic(lemma, s2, s3, model="qwen3:4b", seed=9999))
-
+print(llm_for_wic(lemma, s1, s2, model="qwen3:1.7b-fp16", seed=9999)) # Returns False
+print(llm_for_wic(lemma, s2, s3, model="qwen3:1.7b-fp16", seed=9999)) # Returns True
 ```
 
 ## 🎯 Example Task
@@ -72,16 +71,15 @@ print(llm_for_wic(lemma, s2, s3, model="qwen3:4b", seed=9999))
 For lemma = **bank**:
 
 - Sentence 1: *Under the bridge on the bank of the river.*
-
 - Sentence 2: *I have to go to the bank to deposit some cash.*  
   ➡️ Prediction: **different**
 
 ## 🔑 Features
 
-- 🔄 **Cross-framework support** (Ollama + Transformers)
+- 🔄 **Cross-framework support** (Transformers + Ollama)
 
 - 🎲 **Reproducible runs** with seed control
 
-- 🧪 **Evaluation-ready** functions for batch experiments
+- 🧪 **Dataset processing** functions for experiments
 
 - 📝 **Lightweight, flexible prompts** (with optional `/no_think` directive for Qwen3 Hybrid thinking models)

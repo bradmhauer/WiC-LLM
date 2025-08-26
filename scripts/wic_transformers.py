@@ -20,7 +20,7 @@ def llm_for_wic(lemma: str,
                 sentence2: str,
                 model: str = 'Qwen/Qwen3-1.7B',
                 seed: int = 9999,
-                no_think: bool = False,) -> bool:
+                no_think: bool = True,) -> bool:
 
     global pipe
     if pipe is None:
@@ -58,17 +58,15 @@ def llm_for_wic(lemma: str,
 
 
 if __name__ == '__main__':
-    lem = 'bank'
-    s1 = 'Under the bridge on the bank of the river.'
-    s2 = 'I have to go to the bank to deposit some cash.'
-    s3 = 'The river bank was slippery after the rain.'
-    s4 = 'Is the bank open this late?'
-    sentences = [s1,s2,s3,s4]
+    lemma = "bank"
+    s1 = "Under the bridge on the bank of the river."
+    s2 = "I have to go to the bank to deposit some cash."
+    s3 = "Is the bank still open this late?."
 
-    for si in sentences:
-        for sj in sentences:
-            print(si)
-            print(sj)
-            print(llm_for_wic(lem, si, sj, no_think=True))
-            print()
-    
+    print(s1)
+    print(s2)
+    print(llm_for_wic(lemma, s1, s2, model="Qwen/Qwen3-1.7B", seed=9999)) # False
+    print()
+    print(s2)
+    print(s3)
+    print(llm_for_wic(lemma, s2, s3, model="Qwen/Qwen3-1.7B", seed=9999)) # True

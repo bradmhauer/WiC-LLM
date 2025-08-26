@@ -4,15 +4,15 @@ from wic_utils import get_prompt
 def llm_for_wic(lemma: str,
                 sentence1: str,
                 sentence2: str,
-                model: str = 'qwen3:4b',
+                model: str = 'qwen3:1.7b-fp16',
                 seed: int = 9999,
-                no_think: bool = False) -> bool:
+                no_think: bool = True) -> bool:
     try:
         prompt = get_prompt(lemma, sentence1, sentence2, no_think)
         response = chat(model=model,
                         options={
                             'num_predict':10,
-                            'temperature':0.0,
+                            'temperature':0.00000001,
                             'top_k':1,
                             'top_p':1.0,
                             'seed':seed,
@@ -36,21 +36,19 @@ def llm_for_wic(lemma: str,
 
     except Exception as e:
         print(f"Error in LLM processing: {e}")
-        return False
+        return(False)
 
 
 if __name__ == '__main__':
-    lem = 'bank'
-    s1 = 'Under the bridge on the bank of the river.'
-    s2 = 'I have to go to the bank to deposit some cash.'
-    s3 = 'The river bank was slippery after the rain.'
-    s4 = 'Is the bank open this late?'
-    sentences = [s1,s2,s3,s4]
+    lemma = "bank"
+    s1 = "Under the bridge on the bank of the river."
+    s2 = "I have to go to the bank to deposit some cash."
+    s3 = "Is the bank still open this late?."
 
-    for si in sentences:
-        for sj in sentences:
-            print(si)
-            print(sj)
-            print(llm_for_wic(lem, si, sj, no_think=True))
-            print()
-    
+    print(s1)
+    print(s2)
+    print(llm_for_wic(lemma, s1, s2, model="qwen3:1.7b-fp16", seed=9999)) # False
+    print()
+    print(s2)
+    print(s3)
+    print(llm_for_wic(lemma, s2, s3, model="qwen3:1.7b-fp16", seed=9999)) # True
