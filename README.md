@@ -38,20 +38,7 @@ pip install -r requirements.txt
 
 ## 🚀 Usage
 
-### 1. Run WiC with Ollama
-
-```python
-from wic_ollama import llm_for_wic
-
-lemma = "bank"
-s1 = "Under the bridge on the bank of the river."
-s2 = "I have to go to the bank to deposit some cash."
-
-print(llm_for_wic(lemma, s1, s2, model="qwen3:4b", seed=9999))
-# False (different meaning)
-```
-
-### 2. Run WiC with Transformers
+### 1. Run WiC with Transformers
 
 ```python
 from wic_transformers import llm_for_wic
@@ -59,22 +46,25 @@ from wic_transformers import llm_for_wic
 lemma = "bank"
 s1 = "Under the bridge on the bank of the river."
 s2 = "I have to go to the bank to deposit some cash."
+s3 = "Is the bank still open this late?."
 
-print(llm_for_wic(lemma, s1, s2, model="Qwen/Qwen3-4B-FP8", seed=9999))
+print(llm_for_wic(lemma, s1, s2, model="Qwen/Qwen3-1.7B", seed=9999)) # Returns False
+print(llm_for_wic(lemma, s2, s3, model="Qwen/Qwen3-1.7B", seed=9999)) # Returns True
 ```
 
-### 3. Convert a WiC dataset into prompt/response format
+### 2. Run WiC with Ollama
 
 ```python
-import pandas as pd
-from wic_ollama import wic_df_to_prompt_df
+from wic_ollama import llm_for_wic
 
-wic_df = pd.DataFrame([
-    {"lemma": "bank", "sentence1": s1, "sentence2": s2, "gold": False}
-])
+lemma = "bank"
+s1 = "Under the bridge on the bank of the river."
+s2 = "I have to go to the bank to deposit some cash."
+s3 = "What do I need to open an account at the bank?."
 
-prompt_df = wic_df_to_prompt_df(wic_df)
-print(prompt_df.head())
+print(llm_for_wic(lemma, s1, s2, model="qwen3:4b", seed=9999))
+print(llm_for_wic(lemma, s2, s3, model="qwen3:4b", seed=9999))
+
 ```
 
 ## 🎯 Example Task
