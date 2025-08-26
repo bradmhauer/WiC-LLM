@@ -75,6 +75,11 @@ Once downloaded, place WiC_dataset.zip in the "data" directory, and unzip it.
 
 ## 🚀 Usage
 
+These examples are all intended to be run in the "scripts" sub-directory. So:
+```bash
+cd scripts/
+```
+
 ### 1. Run WiC with Transformers
 
 ```python
