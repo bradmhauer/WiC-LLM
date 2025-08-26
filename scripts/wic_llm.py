@@ -31,7 +31,7 @@ def parse_arguments():
     parser.add_argument('--framework', type=str, default='transformers',
                         help='The backend to use for LLM inference.')
 
-    parser.add_argument('--model', type=str, default='Qwen/Qwen3-4B-FP8',
+    parser.add_argument('--model', type=str, default='Qwen/Qwen3-1.7B',
                         help='The LLM to be used.')
 
     parser.add_argument('--seed', type=int, default=9999,
@@ -40,10 +40,10 @@ def parse_arguments():
     parser.add_argument('--qwen_think', action='store_true', default=False,
                         help='Enable Qwen think mode (default: False)')
 
-    parser.add_argument('--data', type=str, default='../data/owic/dev/dev.data.txt',
+    parser.add_argument('--data', type=str, default='../data/dev/dev.data.txt',
                         help='Path to the data file (default: owic/dev/dev.data.txt)')
 
-    parser.add_argument('--gold', type=str, default='../data/owic/dev/dev.gold.txt',
+    parser.add_argument('--gold', type=str, default='../data/dev/dev.gold.txt',
                         help='Path to the gold file (default: owic/dev/dev.gold.txt)')
 
     parser.add_argument('--output', type=str, default='../results/results_owic_dev.tsv',

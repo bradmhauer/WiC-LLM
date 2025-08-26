@@ -4,7 +4,7 @@ Experiments on the **Word-in-Context (WiC)** task with open-weight large languag
 
 ## 📖 Overview
 
-The WiC task evaluates whether a given word (lemma) has the **same or different meaning** across two sentences. This project explores how modern LLMs handle semantic disambiguation in context.
+The WiC task evaluates whether a given word (technically, lemma) has the **same or different meaning** across two sentences. This project explores how modern LLMs handle semantic disambiguation in context.
 
 We provide:
 
@@ -30,11 +30,48 @@ pip install -r requirements.txt
 
 - Python 3.9+
 
-- [Ollama](https://ollama.com/) (for local inference with supported models)
+- pandas
+
+- tqdm
 
 - [Transformers](https://huggingface.co/docs/transformers) (for Hugging Face models)
 
-- pandas
+- Optional: [Ollama](https://ollama.com/) (for local inference with supported models)
+
+
+## 🎯 Example Task
+
+For lemma = **bank**:
+
+- Sentence 1: *Under the bridge on the bank of the river.*
+- Sentence 2: *I have to go to the bank to deposit some cash.*  
+  ➡️ Prediction: **different**
+
+
+## 🔑 Features
+
+- 🔄 **Cross-framework support** (Transformers + Ollama)
+
+- 🎲 **Reproducible runs** with seed control
+
+- 🧪 **Dataset processing** functions for experiments
+
+- 📝 **Lightweight, flexible prompts** (with optional `/no_think` directive for Qwen3 Hybrid thinking models)
+
+
+## Data
+
+We suggest using the original dataset for this task, as provided by the following NAACL 2019 paper:
+
+Pilehvar, Mohammad Taher, and Jose Camacho-Collados.
+"WiC: the Word-in-Context Dataset for Evaluating Context-
+Sensitive Meaning Representations." In Proceedings of
+NAACL-HLT, pp. 1267-1273. 2019.
+
+In particular, per the paper, the dataset can be obtained [here](https://pilehvar.github.io/wic/).
+
+Once downloaded, place WiC_dataset.zip in the "data" directory, and unzip it.
+
 
 ## 🚀 Usage
 
@@ -66,20 +103,12 @@ print(llm_for_wic(lemma, s1, s2, model="qwen3:1.7b-fp16", seed=9999)) # Returns 
 print(llm_for_wic(lemma, s2, s3, model="qwen3:1.7b-fp16", seed=9999)) # Returns True
 ```
 
-## 🎯 Example Task
+### 3. Full experiments on the original WiC dataset
+```python
+python wic_llm.py --framework transformers --model Qwen/Qwen3-1.7B
+python wic_llm.py --framework ollama --model qwen3:1.7b-fp16
 
-For lemma = **bank**:
+```
 
-- Sentence 1: *Under the bridge on the bank of the river.*
-- Sentence 2: *I have to go to the bank to deposit some cash.*  
-  ➡️ Prediction: **different**
+Both commands will deploy the specified model, via the specified framework, to solve the development set. It will then evaluate the output and place detailed experiment information in results/results_owic_dev.tsv.
 
-## 🔑 Features
-
-- 🔄 **Cross-framework support** (Transformers + Ollama)
-
-- 🎲 **Reproducible runs** with seed control
-
-- 🧪 **Dataset processing** functions for experiments
-
-- 📝 **Lightweight, flexible prompts** (with optional `/no_think` directive for Qwen3 Hybrid thinking models)
