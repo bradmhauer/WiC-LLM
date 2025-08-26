@@ -7,7 +7,7 @@ Experiments on the **Word-in-Context (WiC)** task with open-weight large languag
 
 The WiC task evaluates whether a given word (technically, lemma) has the **same or different meaning** across two sentences. This project explores how modern LLMs handle semantic disambiguation in context.
 
-We provide:
+Provides:
 
 - Prompt construction tailored for semantic judgments.
 
@@ -62,7 +62,7 @@ For lemma = **bank**:
 
 ## 🗃️  Data
 
-We suggest using the original dataset for this task, as provided by the following NAACL 2019 paper:
+I suggest using the original dataset for this task, as provided by the following NAACL 2019 paper:
 
 Pilehvar, Mohammad Taher, and Jose Camacho-Collados.
 "WiC: the Word-in-Context Dataset for Evaluating Context-
