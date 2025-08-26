@@ -1,6 +1,7 @@
 # WiC-LLM
 
-Experiments on the **Word-in-Context (WiC)** task with open-weight large language models (LLMs), using both **Ollama** and **Hugging Face Transformers** frameworks.
+Experiments on the **Word-in-Context (WiC)** task with open-weight large language models (LLMs), using **Hugging Face Transformers** and **Ollama** frameworks.
+
 
 ## 📖 Overview
 
