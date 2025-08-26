@@ -59,7 +59,7 @@ For lemma = **bank**:
 - 📝 **Lightweight, flexible prompts** (with optional `/no_think` directive for Qwen3 Hybrid thinking models)
 
 
-## Data
+## 🗃️  Data
 
 We suggest using the original dataset for this task, as provided by the following NAACL 2019 paper:
 
